@@ -133,8 +133,14 @@ registry.registerPath({
   summary: "List all bounties",
   description:
     "Returns bounty records sorted by `createdAt` descending by default, with optional maintainer/status/token filters and sort parameters. " +
-    "Bounties whose deadline has passed are automatically transitioned to `expired` before the list is returned.",
+    "Bounties whose deadline has passed are automatically transitioned to `expired` before the list is returned. " +
+    "An optional `Idempotency-Key` header replays the original response for retries made with the same key.",
   request: {
+    headers: z.object({
+      "Idempotency-Key": z.string().optional().openapi({
+        description: "Optional key used to replay the original response for repeated requests.",
+      }),
+    }),
     query: z.object({
       q: z.string().optional().openapi({
         description: "Case-insensitive substring filter applied to bounty title, summary, repository, status, and labels.",
