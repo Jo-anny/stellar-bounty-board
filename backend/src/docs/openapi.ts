@@ -104,7 +104,16 @@ registry.registerPath({
   path: "/api/health",
   tags: ["System"],
   summary: "Health check",
-  description: "Returns the service name and current server timestamp. Use this to verify the API is reachable.",
+  description:
+    "Returns the service name and current server timestamp. Use this to verify the API is reachable. " +
+    "An optional `Idempotency-Key` header replays the original response for retries made with the same key.",
+  request: {
+    headers: z.object({
+      "Idempotency-Key": z.string().optional().openapi({
+        description: "Optional key used to replay the original response for repeated requests.",
+      }),
+    }),
+  },
   responses: {
     200: jsonResponse("Service is healthy.", healthResponseSchema),
   },

@@ -406,7 +406,7 @@ const healthHandler = (_req: Request, res: Response) => {
   });
 };
 
-app.get('/api/health', healthHandler);
+app.get('/api/health', idempotencyMiddleware, healthHandler);
 
 app.get('/api/health/deep', async (_req: Request, res: Response) => {
   const result = await runDeepHealthCheck();
